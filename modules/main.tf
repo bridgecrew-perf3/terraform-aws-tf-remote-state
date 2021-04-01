@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = var.bucket
+  bucket = coalesce(var.bucket_name, var.tf_state_bucket_name)
 
   versioning {
     enabled = true
@@ -16,7 +16,7 @@ resource "aws_s3_bucket" "terraform_state" {
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = var.db_table
+  name         = coalesce(var.db_table_name, var.tf_state_locking_db_table_name)
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
   attribute {
